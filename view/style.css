@@ -1,0 +1,7 @@
+.question, #scorecard {
+  display:none;
+}
+.question.active, #scorecard.active{
+  display:block;
+
+}
