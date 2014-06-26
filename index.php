@@ -4,6 +4,8 @@ require_once("includes/krumo/class.krumo.php");
 
 $questions = new Questions("questions.csv");
 $questionlist = $questions->shuffleQuestions();
+$questionlist = $questions->shuffleQuestions();
+$categories = '"'. implode('","', $questions->getCategories()) .'"';
 ?>
 
 <!DOCTYPE html>
@@ -12,6 +14,7 @@ $questionlist = $questions->shuffleQuestions();
     <title>iTest</title>
     <script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
     <script>var qcount = <?php echo count($questionlist); ?>;</script>
+    <script>var categories = new Array(<?php echo $categories ?>);</script>
     <script src="js/multistep.js"></script>
     <link rel="stylesheet" type="text/css" href="view/style.css" media="screen">
   </head>

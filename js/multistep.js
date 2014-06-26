@@ -1,14 +1,33 @@
+
 var responses = new Array();
 var responsecat = new Array();
 // var qcount;
+// var categories;
 
 $( document ).ready(function() {
   $("#main-content .question").first().addClass('active');
   $("a.answer").click(collectResponse);
   $("a.pager").click(pager);
-  // $("a.answer").click(function() { alert($(this).data('response')); });
-  // $("a.answer").data( "response", 52 );
 });
+
+function getProfile() {
+  categoryScores = categoryScores();
+  console.log();
+  var profile="";
+  // for (var key in categoryScores) {
+  //   console.log(key);
+  //   profile += '<li>'+key+' '+categoryScores[key]+'</li>';
+  // }
+
+  profile += '<li>Digital Guru score <span>'+categoryScores["cat1"]+'</span></li>';
+  profile += '<li>Digital Guru score <span>'+categoryScores["cat2"]+'</span></li>';
+  profile += '<li>Digital Guru score <span>'+categoryScores["cat3"]+'</span></li>';
+  profile += '<li>Digital Guru score <span>'+categoryScores["cat4"]+'</span></li>';
+  profile += '<li>Digital Guru score <span>'+categoryScores["cat5"]+'</span></li>';
+  profile += '<li>Digital Guru score <span>'+categoryScores["cat6"]+'</span></li>';
+
+  $("#scores").html(profile);
+}
 
 function collectResponse() {
   var response = $(this).data("response");
@@ -16,9 +35,7 @@ function collectResponse() {
   var qcat = $(this).parent().parent().parent().data("category");
   responses[step] = response;
   responsecat[step] = qcat;
-  console.log(responsecat);
   nextQuestion(step);
-  collateScores();
 }
 
 function pager(action) {
@@ -37,23 +54,8 @@ function pager(action) {
 function collateScores() {
   var scores = new Array();
   var i = 0;
-  console.log(responses);
   for (i = 0; i < responses.length; ++i) {
     scores[responses[i]] = !(responses[i] in scores) ? 1 : scores[responses[i]]+1;
-    console.log(responses[i]);
-  }
-  return scores;
-}
-
-function collateScoresByCategory() {
-  var scores = new Array();
-  var catscores = new Array();
-  var i = 0;
-  console.log(responses);
-  for (i = 0; i < responses.length; ++i) {
-
-    scores[responses[i]] = !(responses[i] in scores) ? 1 : scores[responses[i]]+1;
-    console.log(responses[i]);
   }
   return scores;
 }
@@ -67,13 +69,40 @@ function listScores() {
   $("#scores").html(scorelist);
 }
 
+function categoryScores() {
+  var scores = new Array();
+  var catscores = new Array();
+  var i = 0;
+  for (i = 0; i < categories.length; ++i) {
+    catscores[categories[i]] = 0;
+  }
+  var i = 0;
+  for (i = 0; i < responses.length; ++i) {
+    console.log(responses[i]);
+    switch (responses[i]) {
+      case "No":
+        catscores[responsecat[i]] += 1;
+        break;
+      case "Sometimes":
+        catscores[responsecat[i]] += 2;
+        break;
+      case "Yes":
+        catscores[responsecat[i]] += 3;
+        break;
+      default:
+        catscores[responsecat[i]] += 0;
+    }
+  }  
+  return catscores.sort();
+}
+
 function nextQuestion(step) { 
   if (step < qcount-1) {
     $('#question' + step).removeClass('active').next().addClass('active');
   } else {
     $('#question' + step).removeClass('active');
     $('#scorecard').addClass('active');
-    createProfile();
+    getProfile();
   }
 }
 function prevQuestion(step) {
@@ -90,9 +119,3 @@ function debug(message) {
   $("#message").html(message);
 }
 
-function collateScoresByCategory() {
-  scores = collateScores();
-
-
-  $("#scores").html("You are a tech god");
-}
